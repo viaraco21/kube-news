@@ -12,14 +12,7 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-
-      # Verificar se um arquivo específico existe
-      - name: Check Required File
-        uses: ./my-action
-        with:
-          file-path: 'path/to/required/file.ext'   
-        
-
+           
       # configuracao para acessar o Docker Hub
 
       - name: Set up Docker
@@ -39,16 +32,17 @@ jobs:
 
 # 2. O pipeline deve executar os seguintes passos: 
   # Criacao do Release
+  
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v6.6.6   # Substituir por sua versão dinâmica
-          release_name: Release v6.6.6
+          tag_name: v7.7.7   # Substituir por sua versão dinâmica
+          release_name: Release v7.7.7
           body: |
-            Esta é a versão 6.6.6 da aplicação.
+            Esta é a versão 7.7.7 da aplicação.
             - Lista de mudanças relevantes no release.
           draft: false
           prerelease: false
