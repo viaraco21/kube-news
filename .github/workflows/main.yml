@@ -39,10 +39,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v6.6.6   # Substituir por sua versão dinâmica
-          release_name: Release v6.6.6
+          tag_name: v7.7.7   # Substituir por sua versão dinâmica
+          release_name: Release v7.7.7
           body: |
-            Esta é a versão 6.6.6 da aplicação.
+            Esta é a versão 7.7.7 da aplicação.
             - Lista de mudanças relevantes no release.
           draft: false
           prerelease: false
