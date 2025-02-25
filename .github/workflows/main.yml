@@ -32,6 +32,7 @@ jobs:
 
 # 2. O pipeline deve executar os seguintes passos: 
   # Criacao do Release
+  
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
