@@ -89,7 +89,7 @@ jobs:
     # Informa o endereco para acessar a aplicacao
       - name: Get Application URL
         run: |
-          APP_IP=$(kubectl get svc kubenews -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          APP_IP=$(kubectl get svc kube-node-lease -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
           echo "Application is available at http://${APP_IP}"
 
     # Notifica o DevOps sobre o final do Deploy
