@@ -1,5 +1,5 @@
 
-Projeto
+Projeto SRE | Analista de DevOps | Automatização e Integração Contínua
 
 Tarefa: Crie um pipeline de CI/CD usando o GitHub Actions para um projeto simples de aplicação web.
 
