@@ -28,7 +28,7 @@ jobs:
           file: ./src/Dockerfile
           push: true
           tags: |
-            raco21/kube-news:latest
+            raco21/kube-news:v2
 
 # 2. O pipeline deve executar os seguintes passos: 
   # Criacao do Release
