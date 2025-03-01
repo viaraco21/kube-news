@@ -39,17 +39,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-<<<<<<< HEAD
-          tag_name: v8.8.8   # Substituir por sua versão dinâmica
-          release_name: Release v8.8.8
+          tag_name: v8.8.4   # Substituir por sua versão dinâmica
+          release_name: Release v8.8.4
           body: |
-            Esta é a versão 8.8.8 da aplicação.
-=======
-          tag_name: v8.8.3   # Substituir por sua versão dinâmica
-          release_name: Release v8.8.3
-          body: |
-            Esta é a versão 8.8.3 da aplicação.
->>>>>>> 3bc5d8e84c0220b628fed4b7f83b779126beb9d9
+            Esta é a versão 8.8.4 da aplicação.
             - Lista de mudanças relevantes no release.
           draft: false
           prerelease: false
