@@ -82,8 +82,14 @@ jobs:
     # Step adicional para deletar os deployments existentes para atualizar a imagem
       - name: Delete Existing Deployments
         run: kubectl delete deployment kubenews
+        env: 
+         KUBECONFIG: ${{ secrets.K8S_CONFIG }}   
+
+    # Apply the deployment configuration to recreate the deployment
+      - name: Apply Deployment Configuration
+        run: kubectl apply -f k8s/deployment.yaml
         env:
-        KUBECONFIG: ${{ secrets.K8S_CONFIG }}    
+         KUBECONFIG: ${{ secrets.K8S_CONFIG }}        
 
     # Deploy no Kubernetes cluster    
 
@@ -93,12 +99,6 @@ jobs:
           images: raco21/kube-news:latest
           manifests: |
             k8s/deployment.yaml
-
-    # Apply the deployment configuration to recreate the deployment
-      - name: Apply Deployment Configuration
-        run: kubectl apply -f k8s/deployment.yaml
-        env:
-        KUBECONFIG: ${{ secrets.K8S_CONFIG }}        
 
     # Informa o endereco para acessar a aplicacao
       - name: Get Application URL
