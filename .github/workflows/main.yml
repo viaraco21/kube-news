@@ -39,10 +39,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v9.7.8   # Substituir por sua versão dinâmica
-          release_name: Release v9.7.8
+          tag_name: v9.6.8   # Substituir por sua versão dinâmica
+          release_name: Release v9.6.8
           body: |
-            Esta é a versão 9.7.8 da aplicação.
+            Esta é a versão 9.6.8 da aplicação.
             - Lista de mudanças relevantes no release.
           draft: false
           prerelease: false
@@ -79,12 +79,26 @@ jobs:
           method: kubeconfig
           kubeconfig: ${{ secrets.K8S_CONFIG }}
 
+    # Step adicional para deletar os deployments existentes para atualizar a imagem
+      - name: Delete Existing Deployments
+        run: kubectl delete deployment kubenews
+        env:
+        KUBECONFIG: ${{ secrets.K8S_CONFIG }}    
+
+    # Deploy no Kubernetes cluster    
+
       - name: Deploy to Kubernetes cluster
         uses: Azure/k8s-deploy@v4.9     
         with:
           images: raco21/kube-news:latest
           manifests: |
             k8s/deployment.yaml
+
+    # Apply the deployment configuration to recreate the deployment
+      - name: Apply Deployment Configuration
+        run: kubectl apply -f k8s/deployment.yaml
+        env:
+        KUBECONFIG: ${{ secrets.K8S_CONFIG }}        
 
     # Informa o endereco para acessar a aplicacao
       - name: Get Application URL
