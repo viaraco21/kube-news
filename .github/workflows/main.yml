@@ -79,17 +79,26 @@ jobs:
           method: kubeconfig
           kubeconfig: ${{ secrets.K8S_CONFIG }}
 
-    # Step adicional para deletar os deployments existentes para atualizar a imagem
-      - name: Delete Existing Deployments
-        run: kubectl delete deployment kubenews
-        env: 
-         KUBECONFIG: ${{ secrets.K8S_CONFIG }}   
+    # # Step adicional para deletar os deployments existentes para atualizar a imagem
+    #   - name: Delete Existing Deployments
+    #     run: kubectl delete deployment kubenews
+    #     env: 
+    #      KUBECONFIG: ${{ secrets.K8S_CONFIG }}   
 
-    # Apply the deployment configuration to recreate the deployment
-      - name: Apply Deployment Configuration
-        run: kubectl apply -f k8s/deployment.yaml
-        env:
-         KUBECONFIG: ${{ secrets.K8S_CONFIG }}        
+    # # Apply the deployment configuration to recreate the deployment
+    #   - name: Apply Deployment Configuration
+    #     run: kubectl apply -f k8s/deployment.yaml
+    #     env:
+    #      KUBECONFIG: ${{ secrets.K8S_CONFIG }}        
+
+      - name: Create kubeconfig file
+        run: echo "${{ secrets.K8S_CONFIG }}" > $HOME/.kube/config
+        shell: bash
+
+      - name: Apply Deployment
+        run: |
+         kubectl delete deployment kubenews
+         kubectl apply -f k8s/deployment.yaml
 
     # Deploy no Kubernetes cluster    
 
