@@ -47,7 +47,7 @@ spec:
         app: kubenews
     spec:
       containers:
-      - image: raco21/kube-news:v2
+      - image: raco21/kube-news:latest
         name:  kubenews
         ports:
         - containerPort: 8080

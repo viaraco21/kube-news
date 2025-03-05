@@ -91,14 +91,14 @@ jobs:
     #     env:
     #      KUBECONFIG: ${{ secrets.K8S_CONFIG }}        
 
-      - name: Create kubeconfig file
-        run: echo "${{ secrets.K8S_CONFIG }}" > $HOME/.kube/config
-        shell: bash
+      # - name: Create kubeconfig file
+      #   run: echo "${{ secrets.K8S_CONFIG }}" > $HOME/.kube/config
+      #   shell: bash
 
-      - name: Apply Deployment
-        run: |
-         kubectl delete deployment kubenews
-         kubectl apply -f k8s/deployment.yaml
+      # - name: Apply Deployment
+      #   run: |
+      #    kubectl delete deployment kubenews
+      #    kubectl apply -f k8s/deployment.yaml
 
     # Deploy no Kubernetes cluster    
 
