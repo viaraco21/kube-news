@@ -85,11 +85,11 @@ jobs:
         env: 
          KUBECONFIG: ${{ secrets.K8S_CONFIG }}   
 
-    # Apply the deployment configuration to recreate the deployment
-      - name: Apply Deployment Configuration
-        run: kubectl apply -f k8s/deployment.yaml
-        env:
-         KUBECONFIG: ${{ secrets.K8S_CONFIG }}        
+    # # Apply the deployment configuration to recreate the deployment
+    #   - name: Apply Deployment Configuration
+    #     run: kubectl apply -f k8s/deployment.yaml
+    #     env:
+    #      KUBECONFIG: ${{ secrets.K8S_CONFIG }}        
 
       # - name: Create kubeconfig file
       #   run: echo "${{ secrets.K8S_CONFIG }}" > $HOME/.kube/config
