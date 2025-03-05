@@ -39,10 +39,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v9.1.8   # Substituir por sua versão dinâmica
-          release_name: Release v9.1.8
+          tag_name: v9.0.8   # Substituir por sua versão dinâmica
+          release_name: Release v9.0.8
           body: |
-            Esta é a versão 9.1.8 da aplicação.
+            Esta é a versão 9.0.8 da aplicação.
             - Lista de mudanças relevantes no release.
           draft: false
           prerelease: false
@@ -79,11 +79,11 @@ jobs:
           method: kubeconfig
           kubeconfig: ${{ secrets.K8S_CONFIG }}
 
-    # Step adicional para deletar os deployments existentes para atualizar a imagem
-      - name: Delete Existing Deployments
-        run: kubectl delete deployment kubenews
-        env: 
-         KUBECONFIG: ${{ secrets.K8S_CONFIG }}   
+    # # Step adicional para deletar os deployments existentes para atualizar a imagem
+    #   - name: Delete Existing Deployments
+    #     run: kubectl delete deployment kubenews
+    #     env: 
+    #      KUBECONFIG: ${{ secrets.K8S_CONFIG }}   
 
     # # Apply the deployment configuration to recreate the deployment
     #   - name: Apply Deployment Configuration
