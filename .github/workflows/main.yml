@@ -39,10 +39,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v9.9.6   # Substituir por sua versão dinâmica
-          release_name: Release v9.9.6
+          tag_name: v9.9.7   # Substituir por sua versão dinâmica
+          release_name: Release v9.9.7
           body: |
-            Esta é a versão 9.9.6 da aplicação.
+            Esta é a versão 9.9.7 da aplicação.
             - Lista de mudanças relevantes no release.
           draft: false
           prerelease: false
@@ -89,7 +89,7 @@ jobs:
     # Informa o endereco para acessar a aplicacao
       - name: Get Application URL
         run: |
-          APP_IP=$(kubectl get svc kubenews -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          APP_IP=$(kubectl get svc default -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
           echo "Application is available at http://${APP_IP}"
 
     # Notifica o DevOps sobre o final do Deploy
