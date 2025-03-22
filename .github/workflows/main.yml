@@ -105,7 +105,7 @@ jobs:
       - name: Deploy to Kubernetes cluster
         uses: Azure/k8s-deploy@v4.9     
         with:
-          images: raco21/kube-news:latest
+          images: raco21/kube-news:v${{ github.run_number }}
           manifests: |
             k8s/deployment.yaml
 
