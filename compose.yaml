@@ -1,3 +1,4 @@
+# Banco de Dados Postgres
 services:
   postgre:
     image: postgres:13.13
@@ -7,6 +8,8 @@ services:
       POSTGRES_PASSWORD: pg1234
       POSTGRES_USER: kubenews
       POSTGRES_DB: kubenews
+
+# Aplicação Kube-News
 kubenews:
     image: raco21/kube-news:v1
     depends_on:
