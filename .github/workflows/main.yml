@@ -30,7 +30,7 @@ jobs:
           tags: |
             raco21/kube-news:v${{ github.run_number }}
 
-        # 4. Validação do código com Trivy
+        # 4. Validação com Trivy: Executa uma varredura (scan) de segurança na imagem Docker criada
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.30.0
         with:
@@ -54,6 +54,13 @@ jobs:
             } >> $GITHUB_STEP_SUMMARY
           fi
 
+         # Salvar o relatório como artefato
+      - name: Upload Trivy Report as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report
+          path: trivy-docker-results.txt    
+
 # 2. O pipeline deve executar os seguintes passos: 
   # Criacao do Release
   
@@ -63,10 +70,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v9.9.9.8   # Substituir por sua versão dinâmica
-          release_name: Release v9.9.9.8
+          tag_name: v9.9.9.7   # Substituir por sua versão dinâmica
+          release_name: Release v9.9.9.7
           body: |
-            Esta é a versão 9.9.9.8 da aplicação.
+            Esta é a versão 9.9.9.7 da aplicação.
             - Lista de mudanças relevantes no release.
           draft: false
           prerelease: false
@@ -102,29 +109,6 @@ jobs:
         with:
           method: kubeconfig
           kubeconfig: ${{ secrets.K8S_CONFIG }}
-
-    # # Step adicional para deletar os deployments existentes para atualizar a imagem
-    #   - name: Delete Existing Deployments
-    #     run: kubectl delete deployment kubenews
-    #     env: 
-    #      KUBECONFIG: ${{ secrets.K8S_CONFIG }}   
-
-    # # Apply the deployment configuration to recreate the deployment
-    #   - name: Apply Deployment Configuration
-    #     run: kubectl apply -f k8s/deployment.yaml
-    #     env:
-    #      KUBECONFIG: ${{ secrets.K8S_CONFIG }}        
-
-      # - name: Create kubeconfig file
-      #   run: echo "${{ secrets.K8S_CONFIG }}" > $HOME/.kube/config
-      #   shell: bash
-
-      # - name: Apply Deployment
-      #   run: |
-      #    kubectl delete deployment kubenews
-      #    kubectl apply -f k8s/deployment.yaml
-
-    # Deploy no Kubernetes cluster    
 
       - name: Deploy to Kubernetes cluster
         uses: Azure/k8s-deploy@v4.9     
