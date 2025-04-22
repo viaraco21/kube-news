@@ -61,6 +61,15 @@ jobs:
           name: trivy-report
           path: trivy-docker-results.txt    
 
+          # Notifica em caso de falha
+      - name: Fail on HIGH or CRITICAL vulnerabilities
+        run: |
+            # Conta o número de vulnerabilidades HIGH ou CRITICAL
+            if grep -Eq 'HIGH|CRITICAL' trivy-docker-results.txt; then
+              echo "Falha: Foram encontradas vulnerabilidades HIGH ou CRITICAL na imagem Docker!"
+              exit 1
+            fi  
+
 # 2. O pipeline deve executar os seguintes passos: 
   # Criacao do Release
   
