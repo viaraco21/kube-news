@@ -1,13 +1,13 @@
 
 Projeto SRE | Analista de DevOps | Automatização e Integração Contínua
 
-Tarefa: Crie um pipeline de CI/CD usando o GitHub Actions para um projeto simples de aplicação web.
+Tarefa: Criar um pipeline de CI/CD usando o GitHub Actions para um projeto simples de aplicação web.
 
 Neste projeto eu utilizei o cluster kubernetes da cloud.digitalocean e configurei o secrets K8S_CONFIG para receber o seu arquivo kube config.
 
 *****************************************************************************************************************************************************
 
-Tarefa: Crie um pipeline de CI/CD usando o GitHub Actions para um projeto simples de 
+Tarefa: Criar um pipeline de CI/CD usando o GitHub Actions para um projeto simples de 
 aplicação web.
 Requisitos:
 
@@ -26,6 +26,8 @@ deploy para um usuário ou grupo do github ✔
 aplicação em um ambiente de teste. ✔
 
 4. O pipeline deve notificar o desenvolvedor via e-mail se o processo de CI/CD falhar em qualquer etapa e no final quando finalizar. ✔
+
+5. Executa o Trivy para fazer o scan de vulnerabilidades na imagem Docker recém-criada. ✔
 
 Plus(Não obrigatório porem será um diferencial): ✔
 • Criar um desenho simples de arquitetura na ferramenta draw.io (diagrams.net) que mostre como sera estruturado o pipeline.

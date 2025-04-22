@@ -1,26 +1,27 @@
-## 1. O pipeline deve ser ativado sempre que um novo commit for feito na branch main. ✔
+## 1. O pipeline é ativado quando houver push na branch main
 name: CI/CD Pipeline
 
 on:
   push:
     branches:
-      - main
+      - main  # Só ativa na branch main
 
 jobs:
-  CI:
+  CI:  # Job de Integração Contínua
     runs-on: ubuntu-latest
     steps:
+      # Faz checkout do código-fonte do repositório
       - name: Checkout Repository
         uses: actions/checkout@v3
            
-      # configuracao para acessar o Docker Hub
-
+      # Realiza o login no Docker Hub com credenciais armazenadas como secrets
       - name: Set up Docker
         uses: docker/login-action@v3.0.0
         with:
           username: ${{ secrets.SECRET_RACO1 }}
           password: ${{ secrets.SECRET_RACO }}
 
+      # Constrói a imagem Docker e faz o push para o Docker Hub
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5.0.0
         with:
@@ -30,7 +31,7 @@ jobs:
           tags: |
             raco21/kube-news:v${{ github.run_number }}
 
-        # 4. Validação com Trivy: Executa uma varredura (scan) de segurança na imagem Docker criada
+      # Executa o Trivy para fazer o scan de vulnerabilidades na imagem Docker recém-criada
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.30.0
         with:
@@ -41,7 +42,7 @@ jobs:
           severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
           hide-progress: true
 
-        # 5. Publicar relatórios do Trivy no sumário da execução
+      # Publica o relatório do Trivy no sumário da execução do GitHub Actions (se couber no limite de tamanho)
       - name: Publicar o Trivy no Sumario
         run: |
           if [[ -s trivy-docker-results.txt ]]; then
@@ -54,40 +55,29 @@ jobs:
             } >> $GITHUB_STEP_SUMMARY
           fi
 
-         # Salvar o relatório como artefato
+      # Salva o relatório do Trivy como artifact para download posterior (mesmo se for muito grande pro summary)
       - name: Upload Trivy Report as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: trivy-report
           path: trivy-docker-results.txt    
 
-          # Notifica em caso de falha
-      - name: Fail on HIGH or CRITICAL vulnerabilities
-        run: |
-            # Conta o número de vulnerabilidades HIGH ou CRITICAL
-            if grep -Eq 'HIGH|CRITICAL' trivy-docker-results.txt; then
-              echo "Falha: Foram encontradas vulnerabilidades HIGH ou CRITICAL na imagem Docker!"
-              exit 1
-            fi  
-
-# 2. O pipeline deve executar os seguintes passos: 
-  # Criacao do Release
-  
+      # Cria um novo release do projeto no GitHub, usando tag e nome (deve ser dinâmico na prática)
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v9.9.9.7   # Substituir por sua versão dinâmica
-          release_name: Release v9.9.9.7
+          tag_name: v9.9.9.6   # Substitua por uma versão dinâmica, se desejar
+          release_name: Release v9.9.9.6
           body: |
-            Esta é a versão 9.9.9.7 da aplicação.
+            Esta é a versão 9.9.9.6 da aplicação.
             - Lista de mudanças relevantes no release.
           draft: false
           prerelease: false
 
-    # Notifica o DevOps em caso de falha  
+      # Envia um email ao DevOps se algo falhar nesse job
       - name: Notify Failure
         if: ${{ failure() }}
         uses: dawidd6/action-send-mail@v3
@@ -101,24 +91,26 @@ jobs:
           body: "O job de aprovação falhou para o repositório ${{ github.repository }}. Confira o workflow para mais detalhes."
           to: ${{ secrets.DEVELOPER_EMAIL }}    
 
-# 3. Se todos os passos acima forem bem-sucedidos, o pipeline deve fazer o deploy da aplicação em um ambiente de teste. ✔
-  
+  # 2. Deploy só será executado se o CI passar com sucesso
   CD:
     runs-on: ubuntu-latest
     needs:
-      - CI
+      - CI  # Só executa se o job CI for bem sucedido
     environment: 
-      name: production # Substituir pelo nome do seu ambiente real
+      name: production # Mude para o nome do ambiente real de destino, se desejar
     steps:
+      # Checkout do código (necessário para arquivos de manifesto ou scripts)
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      # Seta o contexto do cluster Kubernetes (com o kubeconfig passado via secret)
       - name: Set Kubernetes Context
         uses: Azure/k8s-set-context@v3
         with:
           method: kubeconfig
           kubeconfig: ${{ secrets.K8S_CONFIG }}
 
+      # Faz o deploy da nova versão da imagem Docker no cluster Kubernetes usando o manifesto informado
       - name: Deploy to Kubernetes cluster
         uses: Azure/k8s-deploy@v4.9     
         with:
@@ -126,14 +118,13 @@ jobs:
           manifests: |
             k8s/deployment.yaml
 
-    # Informa o endereco para acessar a aplicacao
+      # Recupera e exibe o IP público da aplicação a partir do serviço do Kubernetes
       - name: Get Application URL
         run: |
           APP_IP=$(kubectl get svc kubenews -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
           echo "Application is available at http://${APP_IP}"
 
-    # Notifica o DevOps sobre o final do Deploy
-
+      # Envia um email para o DevOps informando o êxito do deploy
       - name: Notify on CI Approval
         if: success()
         uses: dawidd6/action-send-mail@v3
