@@ -37,25 +37,8 @@ Desenho
 
 https://drive.google.com/file/d/1QEG4VXxvf_BTn3m2n3Eupf1EOoleVIxf/view?usp=drive_link
 
-• Criar uma action do tipo TypeScript que faça execução de algum linter ou quality 
-gates
-o Exemplos:
-§ Validar se existe um arquivo no repositório necessário para o build,
-caso negativo abortar a esteira indicando que e necessário esse 
-arquivo
-
-§ Executar uma análise estática usando a ferramenta SonarQube ou 
-alguma outra similiar
-§ Etc...
-
-Critérios de Avaliação:
-1. Correção: O pipeline deve funcionar conforme especificado nos requisitos.
-2. Compreensão: O candidato deve ser capaz de explicar como o pipeline funciona e por 
-que ele configurou as coisas da maneira que fez. (Será avaliado na entrevista)
-3. Eficiência: O pipeline deve ser configurado de maneira eficiente, sem etapas 
-desnecessárias.
-4. Boas práticas: O pipeline deve seguir as boas práticas do GitHub Actions, como o uso 
-de segredos para armazenar informações sensíveis.
-5. O Repositório do github com a implementação do pipeline deve ser enviado aos 
-entrevistadores no prazo indicado.
->>>>>>> b617fd3303f7dccb322086551554f7bc0bec2959
+Critérios:
+1. O pipeline deve funcionar conforme especificado nos requisitos. ✔
+2. Compreensão o pipeline funciona conforme solicitado. ✔
+3. Eficiência: O pipeline deve ser configurado de maneira eficiente, sem etapas desnecessárias. ✔
+4. Boas práticas: O pipeline deve seguir as boas práticas do GitHub Actions, como o uso de segredos para armazenar informações sensíveis. ✔
