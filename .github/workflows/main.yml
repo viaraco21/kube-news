@@ -13,6 +13,15 @@ jobs:
       # Faz checkout do código-fonte do repositório
       - name: Checkout Repository
         uses: actions/checkout@v3
+
+      # Analisa o código com SonarQube
+      - name: SonarQube Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          projectBaseDir: ./src                # ajuste se necessário
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  
            
       # Realiza o login no Docker Hub com credenciais armazenadas como secrets
       - name: Set up Docker
