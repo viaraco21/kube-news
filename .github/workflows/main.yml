@@ -14,6 +14,12 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      # SonarQube Cloud Scan
+      # Faz o scan do código-fonte usando o SonarCloud
+      # O token e as credenciais do SonarCloud devem ser armazenados como secrets no repositório
+      # O projeto deve estar previamente configurado no SonarCloud
+      # O SonarCloud é uma ferramenta de análise de código que ajuda a identificar problemas de qualidade e segurança  
+
       - name: SonarQube Cloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         with:
@@ -79,10 +85,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v9.9.6.0   # Substitua por uma versão dinâmica, se desejar
-          release_name: Release v9.9.6.0
+          tag_name: v9.9.5.0   # Substitua por uma versão dinâmica, se desejar
+          release_name: Release v9.9.5.0
           body: |
-            Esta é a versão 9.9.6.0 da aplicação.
+            Esta é a versão 9.9.5.0 da aplicação.
             - Lista de mudanças relevantes no release.
           draft: false
           prerelease: false
