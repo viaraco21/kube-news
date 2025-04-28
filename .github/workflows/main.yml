@@ -21,7 +21,7 @@ jobs:
           projectBaseDir: ./src
           args: >
             -Dsonar.projectKey=viaraco21
-            -Dsonar.organization=https://sonarcloud.io/organizations/viaraco21/projects
+            -Dsonar.organization=https://sonarcloud.io/project/overview?id=viaraco21_kube-news
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
