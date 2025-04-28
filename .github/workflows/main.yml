@@ -14,7 +14,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # Analisa o código com SonarQube
+      # Analisa o código com SonarQube Cloud
       - name: SonarQube Scan
         uses: SonarSource/sonarcloud-github-action@v2
         with:
@@ -24,7 +24,6 @@ jobs:
             -Dsonar.organization=viaraco21
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
 
       # Realiza o login no Docker Hub com credenciais armazenadas como secrets
       - name: Set up Docker
