@@ -29,6 +29,10 @@ aplicação em um ambiente de teste. ✔
 
 5. Executa o Trivy para fazer o scan de vulnerabilidades na imagem Docker recém-criada. ✔
 
+6. Comando para fazer o Rollback:
+Executar dentro do diretorio k8s
+kubectl rollout undo deployment/kubenews
+
 Plus(Não obrigatório porem será um diferencial): ✔
 • Criar um desenho simples de arquitetura na ferramenta draw.io (diagrams.net) que mostre como sera estruturado o pipeline.
 o Critérios:
