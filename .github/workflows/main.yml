@@ -14,14 +14,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # Analisa o código com SonarQube Cloud
-      - name: SonarQube Scan
+      - name: SonarQube Cloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         with:
           projectBaseDir: ./src
           args: >
-            -Dsonar.projectKey=viaraco21_kube-news
-            -Dsonar.organization=viaraco21
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -80,10 +79,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v9.9.7.0   # Substitua por uma versão dinâmica, se desejar
-          release_name: Release v9.9.7.0
+          tag_name: v9.9.6.0   # Substitua por uma versão dinâmica, se desejar
+          release_name: Release v9.9.6.0
           body: |
-            Esta é a versão 9.9.7.0 da aplicação.
+            Esta é a versão 9.9.6.0 da aplicação.
             - Lista de mudanças relevantes no release.
           draft: false
           prerelease: false
