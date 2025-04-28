@@ -21,10 +21,10 @@ jobs:
           projectBaseDir: ./src
           args: >
             -Dsonar.projectKey=viaraco21
+            -Dsonar.organization=https://sonarcloud.io/organizations/viaraco21/projects
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-                  
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
       # Realiza o login no Docker Hub com credenciais armazenadas como secrets
       - name: Set up Docker
         uses: docker/login-action@v3.0.0
