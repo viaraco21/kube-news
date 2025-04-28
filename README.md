@@ -24,10 +24,10 @@ o Usar funcionalidade environment do github para restringir a aprovação do dep
 
 5. O pipeline deve notificar o desenvolvedor via e-mail se o processo de CI/CD falhar em qualquer etapa e no final quando finalizar. ✔
 
-Se todos os passos acima forem bem-sucedidos, o pipeline deve fazer o deploy da 
+6. Se todos os passos acima forem bem-sucedidos, o pipeline deve fazer o deploy da 
 aplicação em um ambiente de teste. ✔
 
-6. Comando para fazer o Rollback:
+7. Comando para fazer o Rollback:
 Executar dentro do diretorio k8s
 kubectl rollout undo deployment/kubenews
 
@@ -35,8 +35,3 @@ kubectl rollout undo deployment/kubenews
 
 https://drive.google.com/file/d/1QEG4VXxvf_BTn3m2n3Eupf1EOoleVIxf/view?usp=drive_link
 
-Critérios:
-1. O pipeline deve funcionar conforme especificado nos requisitos. ✔
-2. Compreensão o pipeline funciona conforme solicitado. ✔
-3. Eficiência: O pipeline deve ser configurado de maneira eficiente, sem etapas desnecessárias. ✔
-4. Boas práticas: O pipeline deve seguir as boas práticas do GitHub Actions, como o uso de segredos para armazenar informações sensíveis. ✔
