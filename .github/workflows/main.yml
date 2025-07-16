@@ -83,7 +83,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GIT1HUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v9.9.9.1   # Substitua por uma versão dinâmica, se desejar
           release_name: Release v9.9.9.1
