@@ -85,10 +85,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v9.9.7.1   # Substitua por uma versão dinâmica, se desejar
-          release_name: Release v9.9.7.1
+          tag_name: v9.9.6.1   # Substitua por uma versão dinâmica, se desejar
+          release_name: Release v9.9.6.1
           body: |
-           Esta é a versão 9.9.7.1 da aplicação.
+           Esta é a versão 9.9.6.1 da aplicação.
             - Lista de mudanças relevantes no elease.
           draft: false
           prerelease: false
@@ -137,7 +137,7 @@ jobs:
       # Recupera e exibe o IP público da aplicação a partir do serviço do Kubernetes
       - name: Get Application URL
         run: |
-         1 APP_IP=$(kubectl get svc kubenews -o jsonpath='{.status.loadBalancer.ingress[1].ip}')
+          APP_IP=$(kubectl get svc kubenews -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
           echo "Application is available at http://${APP_IP}"
 
       # Evia um email para o DevOps informando o êxito do deploy
