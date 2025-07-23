@@ -35,3 +35,56 @@ kubectl rollout undo deployment/kubenews
 
 https://drive.google.com/file/d/1QEG4VXxvf_BTn3m2n3Eupf1EOoleVIxf/view?usp=drive_link
 
+*****************************************************************************************************************************************************
+Configuração do MCP IA
+
+{
+    "mcpServers": {
+        "filesystem": {
+            "command": "docker",
+            "args": [
+                "run",
+                "-i",
+                "--rm",
+                "-v",
+                "\\\\wsl.localhost\\Ubuntu\\home\\fabricioveronez\\projetos:/projetos",
+                "mcp/filesystem",
+                "/projetos"
+            ]
+        },
+        "kubernetes": {
+            "command": "docker",
+            "args": [
+                "run",
+                "-i",
+                "--rm",
+                "-v",
+                "\\\\wsl.localhost\\Ubuntu\\home\\fabricioveronez\\.kube:/home/appuser/.kube",
+                "mcp/kubernetes"
+            ]
+        },
+        "prometheus": {
+            "command": "docker",
+            "args": [
+                "run",
+                "--rm",
+                "-i",
+                "-e",
+                "PROMETHEUS_URL",
+                "fabriciosveronez/prometheus-mcp-server:v1"
+            ],
+            "env": {
+                "PROMETHEUS_URL": "http://138.197.230.72:80"
+            }
+        }
+    }
+}
+
+*****************************************************************************************************************************************************
+
+Link para ter $ 200 na Digital Ocean
+
+https://m.do.co/c/a939ecc60dfa
+
+
+
