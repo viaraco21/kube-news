@@ -49,7 +49,7 @@ jobs:
 
       # Executa o Trivy para fazer o scan de vulnerabilidades na imagem Docker recém-criada
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.30.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: 'image'
           image-ref: 'raco21/kube-news:v${{ github.run_number }}'
