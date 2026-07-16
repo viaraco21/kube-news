@@ -6,6 +6,9 @@ on:
     branches:
       - main  # Só ativa na branch main
 
+permissions:
+  contents: write
+
 jobs:
   CI:  # Job de Integração Contínua
     runs-on: ubuntu-latest
@@ -78,20 +81,14 @@ jobs:
           name: trivy-report
           path: trivy-docker-results.txt    
 
-      # Cria um novo release do projeto no GitHub, usando tag e nome (deve ser dinâmico na prática)
+      # Cria um release único para a imagem gerada nesta execução.
       - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
+        run: |
+          gh release create "v${{ github.run_number }}" \
+            --title "Release v${{ github.run_number }}" \
+            --generate-notes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v9.7.1.2   # Substitua por uma versão dinâmica, se desejar
-          release_name: Release v9.7.1.2
-          body: |
-           Esta é a versão 9.7.1.2 da aplicação.
-            - Lista de mudanças relevantes no elease.
-          draft: false
-          prerelease: false
 
       # Envia um email ao DevOps se algo falhar nesse job
       - name: Notify Failure
