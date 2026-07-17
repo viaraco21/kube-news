@@ -35,14 +35,14 @@ jobs:
 
       # Realiza o login no Docker Hub com credenciais armazenadas como secrets
       - name: Set up Docker
-        uses: docker/login-action@v3.0.0
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.SECRET_RACO1 }}
           password: ${{ secrets.SECRET_RACO }}
 
       # Constrói a imagem Docker e faz o push para o Docker Hub
       - name: Build and Push Docker Image
-        uses: docker/build-push-action@v5.0.0
+        uses: docker/build-push-action@v7
         with:
           context: ./src
           file: ./src/Dockerfile
@@ -80,7 +80,7 @@ jobs:
 
       # Salva o relatório do Trivy como artifact para download posterior (mesmo se for muito grande pro summary)
       - name: Upload Trivy Report as Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: trivy-report
           path: trivy-docker-results.txt    
