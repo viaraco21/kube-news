@@ -8,6 +8,8 @@ Neste projeto eu utilizei o cluster kubernetes da cloud.digitalocean e configure
 Comando
 ~/.kube/config
 
+export KUBECONFIG=/mnt/c/Users/renatooliveira/Downloads/k8s-raco-kubeconfig
+
 *****************************************************************************************************************************************************
 
 Requisitos:

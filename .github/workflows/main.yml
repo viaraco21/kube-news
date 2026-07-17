@@ -15,7 +15,7 @@ jobs:
     steps:
       # Faz checkout do código-fonte do repositório
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       # SonarQube Cloud Scan
       # Faz o scan do código-fonte usando o SonarCloud
@@ -61,7 +61,7 @@ jobs:
           severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
           hide-progress: true
 
-      # Publica o relatório do Trivy no sumário da execução do GitHub Actions (se couber no limite de tamanho)
+      # Publica uma prévia do relatório do Trivy; o arquivo completo fica no artifact.
       - name: Publicar o Trivy no Sumario
         run: |
           if [[ -s trivy-docker-results.txt ]]; then
@@ -69,7 +69,11 @@ jobs:
               echo "### Relatorio de Vulnerabilidades (Imagem Docker)"
               echo "<details><summary>Expandir</summary>"
               echo ""
-              cat trivy-docker-results.txt
+              head -c 900000 trivy-docker-results.txt
+              if [[ $(wc -c < trivy-docker-results.txt) -gt 900000 ]]; then
+                echo ""
+                echo "Relatorio truncado no sumario. Baixe o artifact trivy-report para ver o conteudo completo."
+              fi
               echo "</details>"
             } >> $GITHUB_STEP_SUMMARY
           fi
@@ -93,7 +97,7 @@ jobs:
       # Envia um email ao DevOps se algo falhar nesse job
       - name: Notify Failure
         if: ${{ failure() }}
-        uses: dawidd6/action-send-mail@v3
+        uses: dawidd6/action-send-mail@v18
         with:
           server_address: smtp.gmail.com
           server_port: 465
@@ -114,18 +118,18 @@ jobs:
     steps:
       # Checkout do código (necessário para arquivos de manifesto ou scripts)
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       # Seta o contexto do cluster Kubernetes (com o kubeconfig passado via secret)
       - name: Set Kubernetes Context
-        uses: Azure/k8s-set-context@v3
+        uses: Azure/k8s-set-context@v5
         with:
           method: kubeconfig
           kubeconfig: ${{ secrets.K8S_CONFIG }}
 
       # Faz o deploy da nova versão da imagem Docker no cluster Kubernetes usando o manifesto informado
       - name: Deploy to Kubernetes cluster
-        uses: Azure/k8s-deploy@v4.9     
+        uses: Azure/k8s-deploy@v7
         with:
           images: raco21/kube-news:v${{ github.run_number }}
           manifests: |
@@ -140,7 +144,7 @@ jobs:
       # Evia um email para o DevOps informando o êxito do deploy
       - name: Notify on CI Approval
         if: success()
-        uses: dawidd6/action-send-mail@v3
+        uses: dawidd6/action-send-mail@v18
         with:
           server_address: smtp.gmail.com
           server_port: 465
