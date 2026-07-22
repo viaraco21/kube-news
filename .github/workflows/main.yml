@@ -17,14 +17,16 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v5
 
-      # SonarQube Cloud Scan
-      # Faz o scan do código-fonte usando o SonarCloud
-      # O token e as credenciais do SonarCloud devem ser armazenados como secrets no repositório
-      # O projeto deve estar previamente configurado no SonarCloud
-      # O SonarCloud é uma ferramenta de análise de código que ajuda a identificar problemas de qualidade e segurança  
+      # Instala a versão de Java exigida pelo SonarQube Cloud.
+      - name: Set up Java 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
 
+      # Faz o scan do código-fonte usando o SonarQube Cloud.
       - name: SonarQube Cloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2
+        uses: SonarSource/sonarqube-scan-action@v8.2.1
         with:
           projectBaseDir: ./src
           args: >
