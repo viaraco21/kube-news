@@ -158,3 +158,4 @@ jobs:
             O job CI foi aprovado para o repositório ${{ github.repository }}.
             A aplicação está disponível
           to: ${{ secrets.DEVELOPER_EMAIL }}
+          
