@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const promBundle = require("express-prom-bundle");
 const config = require('./system-life');
 const middlewares = require('./middleware')
+const { isValidPost } = require('./post-validation');
 
 const metricsMiddleware = promBundle({
     includeMethod: true, 
@@ -32,36 +33,48 @@ app.get('/post', (req, res) => {
 });
 
 app.post('/post', async (req, res) => {
+    const post = req.body || {};
 
-    let valid = true;
-
-    if ((req.body.title.length !== 0 && req.body.title.length < 30) && 
-        (req.body.resumo.length !== 0 && req.body.resumo.length < 50) &&
-        (req.body.description.length !== 0 && req.body.description.length < 2000)) {
-        valid = true;
-    } else {
-        valid = false;
+    if (!isValidPost(post)) {
+        return res.status(400).render('edit-news', {
+            post: { title: post.title || '', content: post.description || '', summary: post.resumo || '' },
+            valido: false
+        });
     }
 
-    if (valid) {
-        await models.Post.create({title: req.body.title, content: req.body.description, summary: req.body.resumo, publishDate: Date.now()});
-        res.redirect('/');
-    } else {
-        res.render('edit-news', {post: {title: req.body.title, content: req.body.description, summary: req.body.resumo}, valido: false});
+    try {
+        await models.Post.create({ title: post.title, content: post.description, summary: post.resumo, publishDate: Date.now() });
+        return res.redirect('/');
+    } catch (error) {
+        return res.status(500).render('edit-news', {
+            post: { title: post.title, content: post.description, summary: post.resumo },
+            valido: false
+        });
     }
-    
 });
 
 app.post('/api/post', async (req, res) => {
+    const articles = req.body && req.body.artigos;
 
-    console.log(req.body.artigos)
-    for(const item of req.body.artigos) {
-
-        await models.Post.create({title: item.title, content: item.description, summary: item.resumo, publishDate: Date.now()});
+    if (!Array.isArray(articles)) {
+        return res.status(400).json({ error: 'artigos must be an array' });
     }
 
-    // models.Post.create({title: req.body.title, content: req.body.description, summary: req.body.resumo, publishDate: Date.now()});
-    res.json(req.body.artigos)
+    if (!articles.every(isValidPost)) {
+        return res.status(400).json({ error: 'each article must contain valid fields' });
+    }
+
+    try {
+        await models.Post.bulkCreate(articles.map((article) => ({
+            title: article.title,
+            content: article.description,
+            summary: article.resumo,
+            publishDate: Date.now()
+        })));
+        return res.status(201).json(articles);
+    } catch (error) {
+        return res.status(500).json({ error: 'unable to save articles' });
+    }
 });
 
 app.get('/post/:id', async (req, res) => {
@@ -77,7 +90,15 @@ app.get('/', async (req, res) => {
     res.render('index',{posts: posts});
 });
 
-models.initDatabase();
-app.listen(8080);
+async function start() {
+    try {
+        await models.initDatabase();
+        app.listen(8080);
+        console.log('Aplicação rodando na porta 8080');
+    } catch (error) {
+        console.error('Falha ao inicializar o banco de dados', error);
+        process.exit(1);
+    }
+}
 
-console.log('Aplicação rodando na porta 8080');
+start();

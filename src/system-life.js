@@ -7,6 +7,15 @@ let readTime = new Date(Date.now());
 let isRead = () => { 
     return readTime < new Date(Date.now());
 };
+const healthControlToken = process.env.HEALTH_CONTROL_TOKEN;
+
+const requireHealthControlToken = (req, res, next) => {
+    if (!healthControlToken || req.get('x-health-control-token') !== healthControlToken) {
+        return res.sendStatus(403);
+    }
+
+    return next();
+};
 
 router.get('/ready', (req, res) => {
    
@@ -27,13 +36,13 @@ router.get('/health', (req, res) => {
     });
 });
 
-router.put('/unhealth', (req, res) => {
+router.put('/unhealth', requireHealthControlToken, (req, res) => {
 
     isHealth = false;
     res.send("OK");
 });
 
-router.put('/unreadyfor/:seconds', (req, res) => {
+router.put('/unreadyfor/:seconds', requireHealthControlToken, (req, res) => {
     
     const dado = new Date(new Date(Date.now()).getTime() + (1000 * req.params.seconds));
     readTime = dado;    
