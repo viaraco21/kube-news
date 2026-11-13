@@ -1,0 +1,41 @@
+name: Rollback Kubernetes
+
+on:
+  workflow_dispatch:
+    inputs:
+      revision:
+        description: 'Revisão do Deployment para restaurar (vazio desfaz para a revisão anterior)'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  rollback:
+    name: Rollback kubenews
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Configurar contexto do Kubernetes
+        uses: Azure/k8s-set-context@v5
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.K8S_CONFIG }}
+
+      - name: Exibir histórico de revisões
+        run: kubectl rollout history deployment/kubenews
+
+      - name: Executar rollback
+        env:
+          REVISION: ${{ inputs.revision }}
+        run: |
+          if [[ -n "$REVISION" ]]; then
+            kubectl rollout undo deployment/kubenews --to-revision="$REVISION"
+          else
+            kubectl rollout undo deployment/kubenews
+          fi
+          kubectl rollout status deployment/kubenews --timeout=180s
+
+      - name: Registrar resultado
+        run: echo "Rollback do Deployment kubenews concluído." >> "$GITHUB_STEP_SUMMARY"
