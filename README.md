@@ -10,6 +10,10 @@ Comando
 
 export KUBECONFIG=/mnt/c/Users/renatooliveira/Downloads/k8s-raco-kubeconfig
 
+mkdir -p ~/.kube
+cp "/mnt/c/Users/renat/Downloads/k8s-1-37-2-raco-kubeconfig.yaml" ~/.kube/config
+chmod 600 ~/.kube/config
+
 *****************************************************************************************************************************************************
 
 Requisitos:
@@ -90,6 +94,53 @@ Configuração do MCP IA
 Link para ter $ 200 na Digital Ocean
 
 https://m.do.co/c/a939ecc60dfa
+
+## Monitoramento com Prometheus e Grafana
+
+A aplicação expõe métricas Prometheus em `/metrics`. O Prometheus coleta essas métricas e o Grafana já vem provisionado com a fonte de dados e um dashboard de requisições, latência, erros HTTP e memória.
+
+### Executar localmente com Docker Compose
+
+Na raiz do projeto:
+
+```bash
+docker compose up --build -d
+```
+
+- Aplicação: http://localhost:8080
+- Prometheus: http://localhost:9090
+- Grafana: http://localhost:3000 (usuário `admin`, senha inicial `admin`)
+
+Prometheus e Grafana ficam publicados apenas em `localhost`. Altere a senha inicial do Grafana após o primeiro acesso. Para parar os serviços: `docker compose down`.
+
+### Executar no Kubernetes
+
+O manifesto `k8s/monitoring.yaml` cria o namespace `monitoring`, Prometheus e Grafana. Antes de aplicar, crie uma senha de administrador do Grafana (substitua pelo valor que deseja usar):
+
+```bash
+kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
+kubectl -n monitoring create secret generic grafana-admin --from-literal=password='SUA_SENHA_FORTE' --dry-run=client -o yaml | kubectl apply -f -
+kubectl apply -f k8s/cluster-metrics.yaml
+kubectl apply -f k8s/monitoring.yaml
+```
+
+O manifesto adicional instala `kube-state-metrics`, `node-exporter` e a permissão de leitura usada pelo Prometheus para descobrir os nós e consultar métricas de containers via kubelet.
+
+Para recuperar a senha do Grafana configurada no cluster:
+
+```bash
+kubectl -n monitoring get secret grafana-admin -o jsonpath='{.data.password}' | base64 --decode; echo
+```
+
+No cluster configurado, o Grafana recebe um IP externo pelo serviço `LoadBalancer`. Consulte o endereço com:
+
+```bash
+kubectl -n monitoring get service grafana
+```
+
+Acesse `http://IP-EXTERNO:3000` com usuário `admin` e a senha criada. O Prometheus permanece interno ao cluster e é consultado pelo Grafana.
+
+Os dados de Prometheus e Grafana usam armazenamento temporário no Kubernetes; eles serão perdidos se os pods forem recriados. Para retenção permanente, configure PersistentVolumes para esses Deployments.
 
 
 
