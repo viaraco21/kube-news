@@ -1,60 +1,30 @@
+# Banco de Dados Postgres
 services:
   postgre:
     image: postgres:13.13
+    ports:
+      - 5432:5432
     environment:
       POSTGRES_PASSWORD: pg1234
       POSTGRES_USER: kubenews
       POSTGRES_DB: kubenews
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U kubenews -d kubenews"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
 
-  kubenews:
+# Aplicação Kube-News
+kubenews:
     image: raco21/kube-news:v1
-    build:
-      context: ./src
-      dockerfile: Dockerfile
     depends_on:
-      postgre:
-        condition: service_healthy
+      - postgre
+    build:
+      context: ./src 
+      dockerfile: ../../Dockerfile  # Corrigi o caminho do Dockerfile
     ports:
-      - "8080:8080"
+      - 8080:8080
     environment:
       DB_DATABASE: kubenews
       DB_USERNAME: kubenews
-      DB_PASSWORD: pg1234
-      DB_HOST: postgre
+      DB_PASSWORD: pg1234 
+      DB_HOST: postgre  # Corrigi o nome do serviço
 
-  prometheus:
-    image: prom/prometheus:v3.5.0
-    depends_on:
-      - kubenews
-    ports:
-      - "127.0.0.1:9090:9090"
-    volumes:
-      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus-data:/prometheus
-
-  grafana:
-    image: grafana/grafana:12.1.1
-    depends_on:
-      - prometheus
-    ports:
-      - "127.0.0.1:3000:3000"
-    environment:
-      GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: admin
-      GF_USERS_ALLOW_SIGN_UP: "false"
-    volumes:
-      - grafana-data:/var/lib/grafana
-      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
-      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
-
-volumes:
-  postgres-data:
-  prometheus-data:
-  grafana-data:
+networks:
+  kubenews_net:
+    driver: bridge
